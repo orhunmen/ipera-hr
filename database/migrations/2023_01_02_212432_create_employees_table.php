@@ -13,15 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string("name")->nullable(false);
-            $table->text("address");
-            $table->integer("phone");
+            $table->string("first_name")->nullable(false);
+            $table->string("last_name")->nullable(false);
             $table->string("e-mail");
-            $table->string("logo");
-            $table->string("website");
-
+            $table->integer("phone")->nullable(false);
+            $table->string("company_name")->references("name")->on("companies"); //foreign key
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('employees');
     }
 };
