@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return view('home', ['users' => $users]);
+        return view('index', ['users' => $users]);
     }
 
     /**
@@ -26,7 +26,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        return view('create');
     }
 
     /**
@@ -61,7 +61,7 @@ class UserController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
 
-        return redirect('users');
+        return redirect('home');
     }
 
     /**
