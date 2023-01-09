@@ -16,12 +16,13 @@
                         </div>
                     @endif
                     @foreach ($users as $key=>$user)
-                        <li><b>Employee {{$key+1}}</b></li>
-                        <a><b>Full Name:</b> {{ $user->first_name }} </a>
-                        <a>{{ $user->last_name }}</a>
-                        <h6><b>E-mail:</b> {{ $user->email }}</h6>
+                        <li><b>Company {{$key+1}}</b></li>
+                        <img src="<?php echo($user->logo); ?>">
+                        <h6><b>Name:</b> {{ $user->name }} </h6>
+                        <h6><b>Address:</b> {{ $user->address }}</h6>
                         <h6><b>Phone:</b> {{ $user->phone }}</h6>
-                        <h6><b>Company:</b> {{ $user->company }}</h6>
+                        <h6><b>Email:</b> {{ $user->email }}</h6>
+                        <h6><b>Website:</b> {{ $user->website }}</h6>
                         <h6>------------------------</h6>
                     @endforeach
                 </div>

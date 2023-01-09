@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string("name")->nullable(false);
-            $table->text("address");
-            $table->integer("phone");
-            $table->string("e-mail");
-            $table->string("logo");
-            $table->string("website");
+            $table->text("address")->nullable();
+            $table->integer("phone")->nullable();
+            $table->string("email")->nullable();
+            $table->string("logo")->nullable();
+            $table->string("website")->nullable();
 
             $table->timestamps();
         });

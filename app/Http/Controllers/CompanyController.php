@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Employee;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller
+class CompanyController extends Controller
 {
     public function __construct()
     {
@@ -20,8 +20,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = Employee::all();
-        return view('index', ['users' => $users]);
+        $users = Company::all();
+        return view('cindex', ['users' => $users]);
     }
 
     /**
@@ -31,7 +31,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('create');
+        return view('createCompany');
     }
 
     /**
@@ -43,26 +43,32 @@ class UserController extends Controller
     public function store(Request $data)
     {
         $validator = Validator::make($data->all(), [
-            'first_name' => 'required|max:255',
-            'last_name' => 'required|max:255',
-            'email' => 'required|email|max:255', //unique:users',
+            'name' => 'required|max:255|unique:companies',
+            'address' => 'max:255',
             'phone' => 'max:255',
-            'company' => 'max:25',
+            'email' => 'email|max:255',
+            'logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:min_width=100,min_height=100',
+            'website' => 'max:255',
         ]);
 
         if ($validator->fails()) {
-            return redirect('create')
+            return redirect('createCompany')
                 ->withErrors($validator)
                 ->withInput();
         }
 
-        $emp = new Employee;
-        $emp->first_name = $data->first_name;
-        $emp->last_name = $data->last_name;
-        $emp->email = $data->email;
-        $emp->phone = $data->phone;
-        $emp->company = $data->company;
-        $emp->save();
+        $cmp = new Company;
+        $cmp->name = $data->name;
+        $cmp->address = $data->address;
+        $cmp->phone = $data->phone;
+        $cmp->email = $data->email;
+
+        $path = $data->file('logo')->getClientOriginalName();
+        $data->file('logo')->move(public_path('logos'), $path);
+        $cmp->logo = $path;
+        $cmp->logo = "public\logos".$path; ///////////////////////////////////////////////////////
+        $cmp->website = $data->website;
+        $cmp->save();
 
         return redirect('home');
     }
