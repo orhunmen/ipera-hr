@@ -138,6 +138,11 @@ class UserController extends Controller
         return redirect('home');
     }
 
+    public function select2delete()
+    {
+        $users = Employee::all();
+        return view('select2delete', ['users' => $users]);
+    }
 
     /**
      * Remove the specified user from storage.
@@ -145,9 +150,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $user = User::findOrFail($id);
+        $request = explode( ' ', $request->employee );
+        $user = Employee::where('first_name',$request[0])->where('last_name',$request[1])->firstOrFail();
         $user->delete();
         return redirect('home');
     }

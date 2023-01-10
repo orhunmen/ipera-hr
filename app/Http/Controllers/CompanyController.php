@@ -63,9 +63,11 @@ class CompanyController extends Controller
         $cmp->phone = $data->phone;
         $cmp->email = $data->email;
 
-        $path = $data->file('logo')->getClientOriginalName();
-        $data->file('logo')->move(public_path('logos'), $path);
-        $cmp->logo = "/logos"."/".$path;
+        if($request->hasFile('logo')){
+            $path = $request->file('logo')->getClientOriginalName();
+            $request->file('logo')->move(public_path('logos'), $path);
+            $cmp->logo = "/logos"."/".$path;
+        }
         $cmp->website = $data->website;
         $cmp->save();
 
@@ -84,16 +86,22 @@ class CompanyController extends Controller
         return view('users.show', ['user' => $user]);
     }
 
+    public function select()
+    {
+        $users = Company::all();
+        return view('selectCmp', ['users' => $users]);
+    }
+
     /**
      * Show the form for editing the specified user.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        $user = User::findOrFail($id);
-        return view('users.edit', ['user' => $user]);
+        $user = Company::where('name', $request->name)->firstOrFail();
+        return view('updateCompany', ['user' => $user]);
     }
 
     /**
@@ -110,37 +118,39 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required|max:255',
-            'last_name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users,email,'.$id,
-            'phone' => 'required|max:255',
-            'company' => 'required|max:255',
-            'password' => 'nullable|min:6',
+            'logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:min_width=100,min_height=100',
         ]);
 
         if ($validator->fails()) {
-            return redirect("users/$id/edit")
+            return redirect("selectCmp")
                 ->withErrors($validator)
                 ->withInput();
         }
 
-        $user = User::findOrFail($id);
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->company = $request->company;
-        if ($request->password) {
-            $user->password = bcrypt($request->password);
+        $cmp = Company::where('name', $request->name)->firstOrFail();
+        $cmp->name = $request->name;
+        $cmp->address = $request->address;
+        $cmp->phone = $request->phone;
+        $cmp->email = $request->email;
+        if($request->hasFile('logo')){
+            $path = $request->file('logo')->getClientOriginalName();
+            $request->file('logo')->move(public_path('logos'), $path);
+            $cmp->logo = "/logos"."/".$path;
         }
-        $user->save();
+        $cmp->website = $request->website;
+        $cmp->save();
 
-        return redirect('users');
+        return redirect('home');
     }
 
+    public function select2deleteCmp()
+    {
+        $users = Company::all();
+        return view('select2deleteCmp', ['users' => $users]);
+    }
 
     /**
      * Remove the specified user from storage.
@@ -148,9 +158,9 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $user = User::findOrFail($id);
+        $user = Company::where('name', $request->name)->firstOrFail();
         $user->delete();
         return redirect('home');
     }
