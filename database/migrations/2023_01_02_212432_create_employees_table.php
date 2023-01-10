@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string("last_name")->nullable(false);
             $table->string("email")->nullable(false)->unique();
             $table->integer("phone")->nullable();
-            $table->string("company")->references("name")->on("companies"); //foreign key
+            $table->string("company")->nullable()->references("name")->on("companies"); //foreign key
             $table->timestamps();
         });
     }

@@ -65,8 +65,7 @@ class CompanyController extends Controller
 
         $path = $data->file('logo')->getClientOriginalName();
         $data->file('logo')->move(public_path('logos'), $path);
-        $cmp->logo = $path;
-        $cmp->logo = "public\logos".$path; ///////////////////////////////////////////////////////
+        $cmp->logo = "/logos"."/".$path;
         $cmp->website = $data->website;
         $cmp->save();
 

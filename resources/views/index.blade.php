@@ -16,9 +16,9 @@
                         </div>
                     @endif
                     @foreach ($users as $key=>$user)
-                        <li><b>Employee {{$key+1}}</b></li>
-                        <a><b>Full Name:</b> {{ $user->first_name }} </a>
-                        <a>{{ $user->last_name }}</a>
+                        <h4><b>Employee {{$key+1}}</b></h4>
+                        <h6><a><b>Full Name:</b> {{ $user->first_name }} </a>
+                        <a>{{ $user->last_name }}</a></h6>
                         <h6><b>E-mail:</b> {{ $user->email }}</h6>
                         <h6><b>Phone:</b> {{ $user->phone }}</h6>
                         <h6><b>Company:</b> {{ $user->company }}</h6>

@@ -45,9 +45,9 @@ class UserController extends Controller
         $validator = Validator::make($data->all(), [
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
-            'email' => 'required|email|max:255', //unique:users',
+            'email' => 'required|unique:employees|email|max:255',
             'phone' => 'max:255',
-            'company' => 'max:25',
+            'company' => 'max:25|exists:companies,name',
         ]);
 
         if ($validator->fails()) {
@@ -79,16 +79,23 @@ class UserController extends Controller
         return view('users.show', ['user' => $user]);
     }
 
+    public function select()
+    {
+        $users = Employee::all();
+        return view('selectEmp', ['users' => $users]);
+    }
+
     /**
      * Show the form for editing the specified user.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $data)
     {
-        $user = User::findOrFail($id);
-        return view('users.edit', ['user' => $user]);
+        $data = explode( ' ', $data->employee );
+        $user = Employee::where('first_name',$data[0])->where('last_name',$data[1])->firstOrFail();
+        return view('update', ['user' => $user]);
     }
 
     /**
@@ -105,35 +112,30 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users,email,'.$id,
-            'phone' => 'required|max:255',
-            'company' => 'required|max:255',
-            'password' => 'nullable|min:6',
+            'email' => 'required|unique:employees|email|max:255',
+            'phone' => 'max:255',
+            'company' => 'max:25|exists:companies,name',
         ]);
 
+        $emp = Employee::where('first_name',$request->first_name)->where('last_name',$request->last_name)->firstOrFail();
+
         if ($validator->fails()) {
-            return redirect("users/$id/edit")
+            return redirect('selectEmp')
                 ->withErrors($validator)
                 ->withInput();
         }
 
-        $user = User::findOrFail($id);
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->company = $request->company;
-        if ($request->password) {
-            $user->password = bcrypt($request->password);
-        }
-        $user->save();
+        $emp->email = $request->email;
+        $emp->phone = $request->phone;
+        $emp->company = $request->company;
+        $emp->save();
 
-        return redirect('users');
+        return redirect('home');
     }
 
 

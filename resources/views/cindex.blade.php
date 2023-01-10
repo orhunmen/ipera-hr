@@ -17,7 +17,7 @@
                     @endif
                     @foreach ($users as $key=>$user)
                         <li><b>Company {{$key+1}}</b></li>
-                        <img src="<?php echo($user->logo); ?>">
+                        <img src="<?php echo $user->logo; ?>" class="image" alt="" title="" width="70" height="50">
                         <h6><b>Name:</b> {{ $user->name }} </h6>
                         <h6><b>Address:</b> {{ $user->address }}</h6>
                         <h6><b>Phone:</b> {{ $user->phone }}</h6>

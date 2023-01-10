@@ -25,4 +25,16 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    public function managerMenu(){
+        return view('managerMenu');
+    }
+
+    public function companyMenu(){
+        return view('company');
+    }
+
+    public function employeeMenu(){
+        return view('employee');
+    }
 }
